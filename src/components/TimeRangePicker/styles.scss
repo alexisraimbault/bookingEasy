@@ -1,0 +1,82 @@
+.time-range-picker {
+    position: relative;
+    width: 300px;
+
+    input[type=range] {
+        pointer-events: none;
+        height: 8px;
+        z-index: 2;
+        position: absolute;
+        width: 100%;
+        -webkit-appearance: none;
+        opacity: 0;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+        cursor: pointer;
+        pointer-events: all;
+        width: 30px;
+        height: 30px;
+        -webkit-appearance: none;
+    }
+
+    .slider {
+        position: relative;
+        height: 8px;
+        z-index: 1;
+        margin: 0 15px;
+
+        .track {
+            background-color: aquamarine;
+            height: 100%;
+            width: 100%;
+            border-radius: 6px;
+        }
+
+        .range {
+            position: absolute;
+            height: 100%;
+            border-radius: 6px;
+            background-color: blue;
+            left: 25%;
+            right: 25%;
+            top: 0px;
+            bottom: 0px;
+        }
+
+        .thumb {
+            cursor: pointer;
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: blue;
+            opacity: 0.3;
+            top: -10px;
+        }
+
+        .left {
+            left: 25%;
+            transform: translate(-15px, 0px);
+        }
+
+        .right {
+            right: 25%;
+            transform: translate(15px, 0px);
+        }
+    }
+
+    .display {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 16px;
+
+        input[type=number] {
+            width: 30px;
+        }
+
+        .time {
+            margin: 0px 8px;
+        }
+    }
+}
