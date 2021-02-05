@@ -6,8 +6,8 @@ class MAppearingComponent extends Component {
     constructor(props) {
         super(props);
         this.containerRef = props.containerRef || React.createRef();
-        
-        this.state = { 
+
+        this.state = {
             isToggled: false,
         }
     }
@@ -23,31 +23,31 @@ class MAppearingComponent extends Component {
     }
 
     toggleAppear = () => {
-        if(!this.containerRef || !this.containerRef.current) {
+        if (!this.containerRef || !this.containerRef.current) {
             return;
         }
 
         this.containerRef.current.style.transform = 'translateY(100%)';
-        this.setState({isToggled: true})
+        this.setState({ isToggled: true })
     }
 
     toggleDissappear = () => {
-        if(!this.containerRef || !this.containerRef.current) {
+        if (!this.containerRef || !this.containerRef.current) {
             return;
         }
 
         this.containerRef.current.style.transform = 'translateY(0%)';
-        this.setState({isToggled: false})
+        this.setState({ isToggled: false })
     }
 
-    render() { 
+    render() {
         const { color, children } = this.props;
 
-        return ( 
+        return (
             <div
                 className="appearing-component-container"
                 ref={this.containerRef}
-                style={{backgroundColor: color}}
+                style={{ backgroundColor: color }}
             >
                 {children}
             </div>

@@ -1,0 +1,9 @@
+.types-manager-container {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+
+  .type-container {
+    display: flex;
+  }
+}

@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap');
+
+.App {
+  overflow-x: hidden;
+  font-family: 'Quicksand', sans-serif;
+  --flashy-primary: #FF6864; 
+  --sweet-primary: #E1F2F7; 
+  --sweet-secondary: #F5F5F5;
+  --neutral-primary: #E5BACE;
+  background-color: var(--sweet-primary);
+}
+
+.root {
+}
+
+body {
+  margin: 0px;
+}
+
+div {
+  outline: none;
+}

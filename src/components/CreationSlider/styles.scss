@@ -1,3 +1,36 @@
-.slick-track {
-    display: flex;
+.creation-slider-container {
+    .slick-track {
+        display: flex;
+        height: 100vh;
+    }
+    
+    .slider-navigation {
+        position: absolute;
+        display: flex;
+        top: 80%;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+
+        .button-container {
+            margin: 0px 80px;
+        }
+    }
+    
+    .creation-slider-element {
+        margin: 10vh 20vw;
+        padding: 5vh 5vw;
+        height: 50vh;
+        width: 50vw !important;
+    }
+
+    .slider-fake-element-container {
+        position: absolute;
+        margin: 10vh 20vw;
+        padding: 5vh 5vw;
+        height: 50vh;
+        width: 50vw !important;
+        background-color: rgba(white, 0.4);
+        border-radius: 16px;
+    }
 }

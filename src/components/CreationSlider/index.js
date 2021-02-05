@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import * as _ from 'lodash';
 import Slider from 'react-slick';
 
-import TimeRangePicker from '../TimeRangePicker';
 import MyDateRangePicker from '../MyDateRangePicker';
 import Timespans from '../Timespans';
 import TypesManager from '../TypesManager';
+import ActionButton from '../../kit/ActionButton';
+import BasicButton from '../../kit/BasicButton';
 
 import './styles.scss';
 
@@ -15,8 +16,8 @@ class CreationSlider extends Component {
     constructor(props) {
         super(props);
         this.sliderRef = React.createRef();
-        
-        this.state = { 
+
+        this.state = {
             sliderIdx: 0,
             preventChange: false,
         }
@@ -53,18 +54,18 @@ class CreationSlider extends Component {
 
     arrayToRender = [
         (
-            <div key="slide-element-1">
+            <div className="creation-slider-element" key="slide-element-1">
                 <MyDateRangePicker />
             </div>
         ),
         (
-            <div key="slide-element-2">
+            <div className="creation-slider-element" key="slide-element-2">
                 <Timespans />
             </div>
         ),
         (
-            <div key="slide-element-3">
-                <TypesManager/>
+            <div className="creation-slider-element" key="slide-element-3">
+                <TypesManager />
             </div>
         ),
     ];
@@ -77,7 +78,7 @@ class CreationSlider extends Component {
         }
 
         this.sliderRef.current.slickPrev();
-        this.setState({sliderIdx: Math.max(0, sliderIdx - 1)});
+        this.setState({ sliderIdx: Math.max(0, sliderIdx - 1) });
     }
 
     goToNext = () => {
@@ -88,23 +89,30 @@ class CreationSlider extends Component {
         }
 
         this.sliderRef.current.slickNext();
-        this.setState({sliderIdx: Math.min(_.size(this.arrayToRender) - 1, sliderIdx + 1)});
+        this.setState({ sliderIdx: Math.min(_.size(this.arrayToRender) - 1, sliderIdx + 1) });
     }
 
-    render() { 
+    render() {
         const { sliderIdx } = this.state;
 
-        return ( 
+        return (
             <div className="creation-slider-container">
-                <Slider 
-                    ref={this.sliderRef} 
-                    {...this.carouselSettings} 
+                <div className="slider-fake-element-container" />
+                <Slider
+                    ref={this.sliderRef}
+                    {...this.carouselSettings}
                     initialSlide={sliderIdx}
                 >
                     {this.arrayToRender}
                 </Slider>
-                <div onClick={this.goToPrev}>Previous</div>
-                <div onClick={this.goToNext}>Next</div>
+                <div className="slider-navigation">
+                    <div className="button-container">
+                        <BasicButton onClick={this.goToPrev} label="Previous" />
+                    </div>
+                    <div className="button-container">
+                        <ActionButton onClick={this.goToNext} label="Next" />
+                    </div>
+                </div>
             </div>
         );
     }
