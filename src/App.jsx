@@ -8,11 +8,12 @@ import TimeRangePicker from './components/TimeRangePicker';
 import MyDateRangePicker from './components/MyDateRangePicker';
 import Timespans from './components/Timespans';
 import TypesManager from './components/TypesManager';
-import CreationSlider from './components/CreationSlider';
+// import CreationSlider from './components/CreationSlider';
+import CreationSidePanel from './components/CreationSidePanel';
 
 const App = () => (
   <div className="App">
-    <CreationSlider />
+    <CreationSidePanel />
   </div>
 );
 
