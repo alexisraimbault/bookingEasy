@@ -32,12 +32,12 @@ const App = () => (
           <Route path="/list">
             <MySessions />
           </Route>
-          <Route path="/create">
+          <Route path="/session/:sessionId">
             <CreationSidePanel />
           </Route>
-          {/* <Route path="/">
-            <Home />
-          </Route> */}
+          <Route path="/">
+            <Login />
+          </Route>
         </Switch>
       </div>
     </SessionProvider>

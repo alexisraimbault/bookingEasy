@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import * as _ from 'lodash';
 import classNames from 'classnames';
+import axios from 'axios';
+import { serverURL } from '../../statics';
+import { useHistory } from 'react-router-dom';
+import * as moment from 'moment';
 
 import MyDateRangePicker from '../MyDateRangePicker';
 import Timespans from '../Timespans';
@@ -8,16 +12,83 @@ import TypesManager from '../TypesManager';
 import ActionButton from '../../kit/ActionButton';
 import BasicButton from '../../kit/BasicButton';
 
+import { SessionContext } from '../../views/SessionProvider';
+
 import './styles.scss';
 
 const CreationSidePanel = ({ props }) => {
+  const context = useContext(SessionContext);
+  const contextData = _.get(context, 'contextObject');
+  // const updateFunctions = _.get(context, 'updateFunctions');
+  const history = useHistory();
+  const sessionId = _.get(history, 'location.state.sessionId');
+
+  const session = _.get(contextData, 'session');
+
+  const [sessionDetails, setSessionDetails] = useState({});
+  const [isLoading, setisLoading] = useState(true);
+
+  const updateDates = () => dates => {
+    const newSessionDetails = _.cloneDeep(sessionDetails);
+    newSessionDetails.settings = _.assign(
+      _.isNil(newSessionDetails.settings) ? {} : newSessionDetails.settings, 
+      {from: moment(dates.from).format(), to: moment(dates.to).format()}
+    );
+
+    setSessionDetails(newSessionDetails);
+  }
+
+  const updateRanges = () => ranges => {
+    const newSessionDetails = _.cloneDeep(sessionDetails);
+    newSessionDetails.settings = _.assign(
+      _.isNil(newSessionDetails.settings) ? {} : newSessionDetails.settings, 
+      {ranges: ranges}
+    );
+
+    setSessionDetails(newSessionDetails);
+  }
+
+  useEffect(() => {
+      axios.defaults.headers.common['authorization'] = _.get(session, 'token');
+      axios.get(`${serverURL}/session/details`, {
+        params: { id: sessionId },
+    })
+      .then(sessionRes => {
+          if (sessionRes.status === 200){
+            setSessionDetails(_.get(sessionRes, 'data.session', {}));
+          }
+          setisLoading(false);
+      }).catch(e => {
+        setisLoading(false);
+      });
+  }, []);
+
+  const saveSettingsInAPI = () => {
+    axios.defaults.headers.common['authorization'] = _.get(session, 'token');
+    axios.put(`${serverURL}/session`, {
+      id: sessionId,
+      settings: sessionDetails.settings,
+    })
+  }
+
   const [currentTab, setCurrentTab] = useState(0);
+  
+  useEffect(() => {
+    if(isLoading) {
+      return;
+    }
+
+    saveSettingsInAPI();
+  }, [currentTab])
 
   const arrayToRender = [
     {
       item: (
         <div className="creation-side-element">
-          <MyDateRangePicker />
+          <MyDateRangePicker
+            bubbleUp={updateDates()}
+            defaultDates={{from: _.get(sessionDetails, 'settings.from', null), to: _.get(sessionDetails, 'settings.to', null)}}
+          />
         </div>
       ),
       label: 'Dates',
@@ -28,7 +99,10 @@ const CreationSidePanel = ({ props }) => {
     {
       item: (
         <div className="creation-side-element">
-          <Timespans />
+          <Timespans
+            bubbleUp={updateRanges()}
+            defaultRanges={_.get(sessionDetails, 'settings.ranges', [])}
+           />
         </div>
       ),
       label: 'Horaires',
@@ -49,7 +123,8 @@ const CreationSidePanel = ({ props }) => {
     },
   ];
 
-  return (
+  return isLoading ? <></> :
+  (
     <div className="creation-side-panel__wrapper">
     <div className="creation-side-panel__container">
       <div className="creation-side-panel__left">

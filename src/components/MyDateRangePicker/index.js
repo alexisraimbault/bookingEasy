@@ -9,12 +9,14 @@ class MyDateRangePicker extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            from: null,
-            to: null,
+            from: _.get(props, 'defaultDates.from', null),
+            to: _.get(props, 'defaultDates.to', null),
         }
     }
 
-    updateDates = ({startDate: from, endDate: to}) => this.setState({from, to});
+    updateDates = ({startDate: from, endDate: to}) => this.setState({from, to}, () => {
+        this.props.bubbleUp && this.props.bubbleUp({from, to});
+    });
 
     render() { 
         const { from, to } = this.state;

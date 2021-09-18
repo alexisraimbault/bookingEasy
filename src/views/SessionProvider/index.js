@@ -1,10 +1,15 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const SessionContext = createContext({});
 
 const SessionProvider = ({ children }) => {
-
+    
     const [session, setSession] = useState(_.isString(localStorage.getItem('session')) ? JSON.parse(localStorage.getItem('session')) : {});
+
+    useEffect(() => {
+        axios.defaults.headers.common['authorization'] = _.get(session, 'token');
+    }, [session])
 
     const updateFunctions = {
         setSession,
@@ -13,7 +18,7 @@ const SessionProvider = ({ children }) => {
     return (
         <SessionContext.Provider
             value={{
-                contextObject: session,
+                contextObject: {session},
                 updateFunctions,
             }}
         >

@@ -10,7 +10,7 @@ class Timespans extends Component {
         super(props);
 
         this.state = {
-            ranges: [
+            ranges: _.isEmpty(props.defaultRanges) ? [
                 {
                     from: {
                         hours: 8,
@@ -27,11 +27,14 @@ class Timespans extends Component {
                     updateCSS: () => { },
                     shouldUpdateCSS: 0,
                 }
-            ],
+            ] : _.map(props.defaultRanges, range => _.assign(range, {
+                updateCSS: () => { },
+                shouldUpdateCSS: 0,
+            })),
         }
     }
 
-    updateRange = idx => ({ from, to }, callbackFunction = () => { }) => {
+    updateRange = idx => ({ from, to }) => {
         const { ranges } = this.state;
 
         const tmpRanges = _.cloneDeep(ranges);
@@ -39,7 +42,8 @@ class Timespans extends Component {
         tmpRanges[idx].to = to;
 
         this.setState({ ranges: tmpRanges }, () => {
-            callbackFunction && callbackFunction();
+            // callbackFunction && callbackFunction();
+            this.props.bubbleUp && this.props.bubbleUp(_.map(tmpRanges, range => _.omit(range, ['updateCSS', 'shouldUpdateCSS'])))
         });
     }
 

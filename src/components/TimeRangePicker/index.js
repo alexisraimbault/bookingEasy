@@ -79,9 +79,9 @@ class TimeRangePicker extends Component {
         const eventTime = this.flattenTime(this.normalizeToTime(_.parseInt(event.target.value)));
         const fromValue = this.normalizeToPercent(from);
 
+        this.props.updateRanges && this.props.updateRanges({from, to: fromValue > _.parseInt(event.target.value) ? from : eventTime});
         this.setState({to: fromValue > _.parseInt(event.target.value) ? from : eventTime}, () => {
             this.updateCSS();
-            this.props.updateRanges && this.props.updateRanges({from, to});
         });
     }
 
@@ -101,9 +101,9 @@ class TimeRangePicker extends Component {
         const newFrom = _.assign({}, from, {hours: _.isEmpty(event.target.value) ? 0 : Math.min(20, Math.max(6, _.parseInt(event.target.value)))});
         const newFromValue = this.normalizeToPercent(newFrom);
 
+        this.props.updateRanges && this.props.updateRanges({from: newFrom, to: toValue > newFromValue ? to : newFrom });
         this.setState({from: newFrom, to: toValue > newFromValue ? to : newFrom, displayFromHours: -1 }, () => {
             this.updateCSS();
-            this.props.updateRanges && this.props.updateRanges({from, to});
         });
     }
 
@@ -118,9 +118,9 @@ class TimeRangePicker extends Component {
         const newFrom = _.assign({}, from, {minutes: _.isEmpty(event.target.value) ? 0 :Math.min(60, Math.max(0, _.parseInt(event.target.value)))});
         const newFromValue = this.normalizeToPercent(newFrom);
 
+        this.props.updateRanges && this.props.updateRanges({from: newFrom, to: toValue > newFromValue ? to : newFrom });
         this.setState({from: newFrom, to: toValue > newFromValue ? to : newFrom, displayFromMinutes: -1 }, () => {
             this.updateCSS();
-            this.props.updateRanges && this.props.updateRanges({from, to});
         });
     }
 
@@ -140,9 +140,9 @@ class TimeRangePicker extends Component {
         const newTo = _.assign({}, to, {hours: _.isEmpty(event.target.value) ? 0 : Math.min(20, Math.max(6, _.parseInt(event.target.value)))});
         const newToValue = this.normalizeToPercent(newTo);
 
+        this.props.updateRanges && this.props.updateRanges({from: fromValue < newToValue ? from : newTo, to: newTo});
         this.setState({from: fromValue < newToValue ? from : newTo, to: newTo, displayToHours: -1 }, () => {
             this.updateCSS();
-            this.props.updateRanges && this.props.updateRanges({from, to});
         });
     }
 
@@ -157,9 +157,9 @@ class TimeRangePicker extends Component {
         const newTo = _.assign({}, to, {minutes: _.isEmpty(event.target.value) ? 0 : Math.min(60, Math.max(0, _.parseInt(event.target.value)))});
         const newToValue = this.normalizeToPercent(newTo);
 
+        this.props.updateRanges && this.props.updateRanges({from: fromValue < newToValue ? from : newTo, to: newTo});
         this.setState({from: fromValue < newToValue ? from : newTo, to: newTo, displayToMinutes: -1 }, () => {
             this.updateCSS();
-            this.props.updateRanges && this.props.updateRanges({from, to});
         });
     }
 
@@ -203,8 +203,8 @@ class TimeRangePicker extends Component {
                         <input type="number" min={0} max={60} value={displayToMinutes !== -1 ? displayToMinutes : to.minutes} onChange={setToMinutes}/>
                     </div>
                     </div>
-                <input type="range" min={0} max={100} value={fromTime} onChange={setMin}/>
-                <input type="range" min={0} max={100} value={toTime} onChange={setMax}/>
+                <input type="range" min={0} max={100} value={fromTime} onChange={this.setMin}/>
+                <input type="range" min={0} max={100} value={toTime} onChange={this.setMax}/>
                 <div className="slider">
                     <div className="track"/>
                     <div className="range" ref={this.rangeRef}/>
