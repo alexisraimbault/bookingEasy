@@ -28,6 +28,13 @@ const MySessions = ({ props }) => {
             if (listRes.status === 200){
                 setMySessions(_.get(listRes, 'data.sessions', []));
             }
+            if (listRes.status === 403){
+                localStorage.removeItem('session');
+                history.push('login');
+            }
+        }).catch(e => {
+            localStorage.removeItem('session');
+            history.push('login');
         });
     }, []);
 
@@ -37,7 +44,7 @@ const MySessions = ({ props }) => {
 
     return (
         <div>
-            {_.isEmpty(mySessions) && 'HELLO FROM MY SESSIONS'}
+            {_.isEmpty(mySessions) && 'No sessions'}
             {!_.isEmpty(mySessions) && (
                 <div>
                     {_.map(mySessions, (mySession, sessionIdx) => {

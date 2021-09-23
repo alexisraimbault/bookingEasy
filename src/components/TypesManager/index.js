@@ -12,7 +12,7 @@ class TypesManager extends Component {
         this.containerRef = React.createRef();
 
         this.state = {
-            types: [],
+            types: _.get(props, 'defaultTypes', []),
             isEditing: false,
             editingIdx: -1,
         }
@@ -20,19 +20,24 @@ class TypesManager extends Component {
 
     updateName = idx => name => {
         const { types } = this.state;
+        const { bubbleUp } = this.props;
 
         const tmpTypes = _.cloneDeep(types);
         tmpTypes[idx].name = name;
 
+        bubbleUp(tmpTypes);
         this.setState({ types: tmpTypes });
+        
     }
 
     updateDuration = idx => duration => {
         const { types } = this.state;
+        const { bubbleUp } = this.props;
 
         const tmpTypes = _.cloneDeep(types);
         tmpTypes[idx].duration = duration;
 
+        bubbleUp(tmpTypes);
         this.setState({ types: tmpTypes });
     }
 
@@ -42,10 +47,12 @@ class TypesManager extends Component {
 
     addType = () => {
         const { types } = this.state;
+        const { bubbleUp } = this.props;
 
         let tmpTypes = _.cloneDeep(types);
         tmpTypes = _.concat(tmpTypes, { name: '', duration: { hours: '0', minutes: '0' } });
 
+        bubbleUp(tmpTypes);
         this.setState({
             types: tmpTypes,
             isEditing: true,
@@ -55,10 +62,12 @@ class TypesManager extends Component {
 
     removeType = idx => {
         const { types } = this.state;
+        const { bubbleUp } = this.props;
 
         let tmpTypes = _.cloneDeep(types);
         tmpTypes.splice(idx, 1);
 
+        bubbleUp(tmpTypes);
         this.setState({
             types: tmpTypes,
             isEditing: false,
@@ -71,9 +80,7 @@ class TypesManager extends Component {
             this.containerRef.current.style.transform = 'translateY(0%)';
         }
 
-        setTimeout(() => {
-            this.setState({ editingIdx: -1, isEditing: false });
-        }, 300);
+        this.setState({ editingIdx: -1, isEditing: false });
     };
 
     render() {
@@ -81,19 +88,9 @@ class TypesManager extends Component {
 
         return (
             <div className="types-manager-container">
-                {_.map(types, (type, idx) => (
+                {_.map(types, (type, idx) => idx === editingIdx ? 
+                (
                     <div className="type-container">
-                        <div className="type-display">{`${type.name} : ${type.duration.hours}h ${type.duration.minutes}mins`}</div>
-                        <div onClick={_.partial(this.goToEdit, idx)}>Edit</div>
-                        <div onClick={_.partial(this.removeType, idx)}>Remove</div>
-                    </div>
-                ))}
-                <div onClick={this.addType}>Add new</div>
-                {isEditing && (
-                    <MAppearingComponent
-                        color="lightcoral"
-                        containerRef={this.containerRef}
-                    >
                         <TypeCreator
                             name={types[editingIdx].name}
                             duration={types[editingIdx].duration}
@@ -101,8 +98,16 @@ class TypesManager extends Component {
                             updateName={this.updateName(editingIdx)}
                         />
                         <div onClick={this.validateType}>Save</div>
-                    </MAppearingComponent>
-                )}
+                    </div>
+                ):
+                (
+                    <div className="type-container">
+                        <div className="type-display">{`${type.name} : ${type.duration.hours}h ${type.duration.minutes}mins`}</div>
+                        <div onClick={_.partial(this.goToEdit, idx)}>Edit</div>
+                        <div onClick={_.partial(this.removeType, idx)}>Remove</div>
+                    </div>
+                ))}
+                <div onClick={this.addType}>Add new</div>
             </div>
         );
     }

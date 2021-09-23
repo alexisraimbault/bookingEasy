@@ -42,7 +42,17 @@ const CreationSidePanel = ({ props }) => {
     const newSessionDetails = _.cloneDeep(sessionDetails);
     newSessionDetails.settings = _.assign(
       _.isNil(newSessionDetails.settings) ? {} : newSessionDetails.settings, 
-      {ranges: ranges}
+      {ranges}
+    );
+
+    setSessionDetails(newSessionDetails);
+  }
+
+  const updateTypes = () => types => {
+    const newSessionDetails = _.cloneDeep(sessionDetails);
+    newSessionDetails.types = _.assign(
+      _.isNil(newSessionDetails.settings) ? {} : newSessionDetails.settings, 
+      {types}
     );
 
     setSessionDetails(newSessionDetails);
@@ -56,6 +66,10 @@ const CreationSidePanel = ({ props }) => {
       .then(sessionRes => {
           if (sessionRes.status === 200){
             setSessionDetails(_.get(sessionRes, 'data.session', {}));
+          }
+          if (listRes.status === 403){
+              localStorage.removeItem('session');
+              history.push('login');
           }
           setisLoading(false);
       }).catch(e => {
@@ -113,7 +127,10 @@ const CreationSidePanel = ({ props }) => {
     {
       item: (
         <div className="creation-side-element">
-          <TypesManager />
+          <TypesManager
+            bubbleUp={updateTypes()}
+            defaultTypes={_.get(sessionDetails, 'settings.types', [])}
+          />
         </div>
       ),
       label: 'Types de rendez-vous',
