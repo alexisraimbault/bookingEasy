@@ -19,6 +19,7 @@ import {
 import Login from './views/Login';
 import MySessions from './views/MySessions';
 import CreationSidePanel from './components/CreationSidePanel';
+import BookMyEvent from './views/BookMyEvent';
 import SessionProvider from './views/SessionProvider';
 
 const App = () => (
@@ -34,6 +35,9 @@ const App = () => (
           </Route>
           <Route path="/session/:sessionId">
             <CreationSidePanel />
+          </Route>
+          <Route path="/booking/:sessionId">
+            <BookMyEvent />
           </Route>
           <Route path="/">
             <Login />

@@ -14,7 +14,7 @@ import './styles.scss';
 const MySessions = ({ props }) => {
     const context = useContext(SessionContext);
     const contextData = _.get(context, 'contextObject');
-    // const updateFunctions = _.get(context, 'updateFunctions');
+    const updateFunctions = _.get(context, 'updateFunctions');
     const history = useHistory();
 
     const [mySessions, setMySessions] = useState([]);
@@ -30,10 +30,12 @@ const MySessions = ({ props }) => {
             }
             if (listRes.status === 403){
                 localStorage.removeItem('session');
+                updateFunctions.setSession(undefined);
                 history.push('login');
             }
         }).catch(e => {
             localStorage.removeItem('session');
+            updateFunctions.setSession(undefined);
             history.push('login');
         });
     }, []);
