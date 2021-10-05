@@ -7,6 +7,7 @@ import * as moment from 'moment';
 
 import Input from '../../kit/Input';
 import ActionButton from '../../kit/ActionButton';
+import CalendarWrapper from '../../components/CalendarWrapper';
 
 import { SessionContext } from '../SessionProvider';
 
@@ -16,7 +17,12 @@ const BookMyEvent = ({ props }) => {
     const history = useHistory();
     const availableSpans = useRef([]);
     const [types, setTypes] = useState([]);
-    const sessionId = 4;
+
+    const url = history.location.pathname;
+    const urlItemsToNumber = _.map(_.split(url, '/'), _.toNumber);
+    const sessionIdIdx = _.findIndex(urlItemsToNumber, item => item !== 0 && !_.isNaN(item) && _.isNumber(item));
+
+    const sessionId = urlItemsToNumber[sessionIdIdx];
 
     const selectType = typeIdx => {
         const newTypes =_.cloneDeep(types);
@@ -36,7 +42,6 @@ const BookMyEvent = ({ props }) => {
             params: { id: sessionId },
         })
         .then(res => {
-            console.log('ALEXIS res', res);
             availableSpans.current = _.get(res, 'data.available', []);
             setTypes(_.map(_.get(res, 'data.types', []), type => _.assign(type, {selected: false})));
 
@@ -100,6 +105,13 @@ const BookMyEvent = ({ props }) => {
                 </div>
             )
             })}
+            <CalendarWrapper
+                events={_.map(potentials, potential => _.assign(potential, {
+                    start: moment(potential.from).toDate(), 
+                    end: moment(potential.to).toDate(),
+                    title: 'test',
+                }))}
+            />
         </div>
     );
 }
